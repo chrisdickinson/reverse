@@ -1,0 +1,34 @@
+{
+  "name": "reverse",
+  "version": "1.0.0",
+  "description": "a url router with url reversing capabilities",
+  "main": "./lib/index.js",
+  "scripts": {
+    "test": "tape test/*-test.js && standard",
+    "test-cov": "nyc tape test/*-test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/chrisdickinson/reverse.git"
+  },
+  "keywords": [
+    "router",
+    "reverse",
+    "url"
+  ],
+  "author": "Chris Dickinson <chris@neversaw.us> (http://neversaw.us/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chrisdickinson/reverse/issues"
+  },
+  "homepage": "https://github.com/chrisdickinson/reverse#readme",
+  "devDependencies": {
+    "joi": "^7.0.1",
+    "nyc": "^5.0.0",
+    "standard": "^5.4.1",
+    "tape": "^4.2.2"
+  },
+  "dependencies": {
+    "quotemeta": "0.0.0"
+  }
+}
