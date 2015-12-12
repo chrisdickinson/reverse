@@ -63,7 +63,7 @@ tape('match returns controller, method, and cooked params', assert => {
 
   const result = router.match('GET', `/example/${expected}`)
   assert.ok(result)
-  assert.equal(result.method, controller.greet)
+  assert.equal(result.target, controller.greet)
   assert.equal(result.controller, controller)
   assert.equal(result.context.get('id'), expected)
   assert.end()
@@ -107,7 +107,7 @@ tape('match allows routes to "fall through" included routers', assert => {
 
   const match = routes.match('GET', '/blog/hey-there')
   assert.equal(
-    match.method(),
+    match.target(),
     expected,
     'should have matched the appropriate route'
   )
@@ -115,7 +115,7 @@ tape('match allows routes to "fall through" included routers', assert => {
   assert.equal(match2, null, 'mismatched methods')
   const match3 = routes.match('POST', '/blog/12')
   assert.equal(
-    match3.method(),
+    match3.target(),
     inner,
     'should have matched the appropriate inner route'
   )
