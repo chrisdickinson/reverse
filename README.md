@@ -1,7 +1,7 @@
-# reverse
+# reverse ![build status](https://travis-ci.org/chrisdickinson/reverse.svg?branch=master)
 
-A [DSL][domain-specific-language] for building [routers][what-is-a-router].
-Supports forward and reverse matching.
+A [DSL][domain-specific-language] for building routers. Supports forward and
+reverse matching.
 
 ```javascript
 const routes = require('reverse')
@@ -43,11 +43,15 @@ myRouter.reverse('showPost', {
   * [Using `Match` Objects][docs-using-match-objects]
   * [Using `reverse`][docs-using-reverse]
 * [API reference][docs-api-reference]
+  * [Router](#reverse-̀language-̀--functioncontroller--router)
+    * [Language](#language)
+    * [Controllers](#controller-object)
+    * [Router#match](#routermatchmethodstring-routestring--match--null)
+      * [Match](#match-object)
+    * [Router#reverse](#routerreversenamestring-argsobject--string--null)
+  * [Parameter](#reverseparamname-string-validator-validator--parameter)
 
 ## API
-
-This is an abridged version of the [full API reference][docs-api-reference] for
-quick lookup!
 
 #### `reverse ̀<Language> ̀ → Function(Controller) → Router`
 
@@ -235,3 +239,7 @@ regexen should always begin with `^` and end with `$` to ensure a full match.
 
 ## License
 
+MIT
+
+[domain-specific-language]: https://en.wikipedia.org/wiki/Domain-specific_language
+[docs-api-reference]: #api
