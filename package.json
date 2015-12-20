@@ -1,6 +1,6 @@
 {
   "name": "reverse",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a url router with url reversing capabilities",
   "main": "./lib/index.js",
   "scripts": {
