@@ -69,6 +69,24 @@ tape('match returns controller, method, and cooked params', assert => {
   assert.end()
 })
 
+tape('match context unescapes input', assert => {
+  const id = reverse.param('id', id => id)
+  const controller = {
+    greet () {
+    }
+  }
+  const router = reverse`
+    GET /example/${id} greet
+  `(controller)
+
+  const result = router.match('GET', `/example/%40hello%2fworld%2Fok`)
+  assert.ok(result)
+  assert.equal(result.target, controller.greet)
+  assert.equal(result.controller, controller)
+  assert.equal(result.context.get('id'), '@hello/world/ok')
+  assert.end()
+})
+
 tape('match can include routes from other routers', assert => {
   const id = reverse.param('id', /^\d+$/)
   const routes = reverse`
