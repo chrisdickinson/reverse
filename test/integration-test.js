@@ -106,6 +106,14 @@ tape('match can include routes from other routers', assert => {
   assert.end()
 })
 
+tape('match will hit /-routes of included routers', assert => {
+  const inner = reverse`GET / main`({main () {}})
+  const routes = reverse`* /test inner`({inner})
+
+  assert.ok(routes.match('GET', '/test'))
+  assert.end()
+})
+
 tape('match allows routes to "fall through" included routers', assert => {
   const id = reverse.param('id', /^\d+$/)
   const slug = reverse.param('slug', /^[a-z_\-]{1}[\w-]*$/)
@@ -201,5 +209,23 @@ tape('reverse matches included routes', assert => {
     'name': 'hello',
     'id': 10
   }), '/hello/10')
+  assert.end()
+})
+
+tape('reverse escapes params', assert => {
+  const name = reverse.param('name', /^\w+$/)
+  const router = reverse`
+    GET /${name} main
+  `({main () {}})
+
+  assert.equal(
+    router.reverse('main', {name: '@hello/world'}),
+    '/%40hello%2Fworld'
+  )
+
+  assert.equal(
+    router.reverse('main', {name: '@hello/world'}, true),
+    '/@hello/world'
+  )
   assert.end()
 })
