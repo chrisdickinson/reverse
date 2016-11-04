@@ -155,6 +155,11 @@ createCRUDRouter(new NetBeans())
 Given an HTTP method and a string representing the [`pathname` of the url][url-parse],
 return a `Match` object (or `null`, if no target matches.)
 
+##### `Router#concat(rhs:Router) → Router`
+
+Concatenate two existing routers together, returning a new `Router` that nests
+the two input routers.
+
 ###### `Match` object
 
 A `Match` object contains the following properties:
