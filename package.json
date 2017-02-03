@@ -4,8 +4,12 @@
   "description": "a url router with url reversing capabilities",
   "main": "./lib/index.js",
   "scripts": {
-    "test": "tape test/*-test.js && standard",
-    "test-cov": "nyc tape test/*-test.js"
+    "test:code": "tap ${TAP_FLAGS:-'--'} test/*.js",
+    "test:style": "standard",
+    "test:travis": "npm run cov:test && npm run test:style",
+    "test": "npm run test:code && npm run test:style",
+    "cov:test": "TAP_FLAGS='--cov' npm run test:code",
+    "cov:view": "TAP_FLAGS='--coverage-report=html' npm run test:code"
   },
   "repository": {
     "type": "git",
@@ -23,10 +27,9 @@
   },
   "homepage": "https://github.com/chrisdickinson/reverse#readme",
   "devDependencies": {
-    "joi": "^7.0.1",
-    "nyc": "^5.0.0",
-    "standard": "^5.4.1",
-    "tape": "^4.2.2"
+    "joi": "^10.2.1",
+    "standard": "^8.6.0",
+    "tap": "^10.0.0"
   },
   "dependencies": {
     "quotemeta": "0.0.0"

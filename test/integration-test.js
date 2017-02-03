@@ -1,9 +1,9 @@
 'use strict'
 
 const reverse = require('..')
-const tape = require('tape')
+const tap = require('tap')
 
-tape('match requires full route to be consumed', assert => {
+tap.test('match requires full route to be consumed', assert => {
   const router = reverse`
     GET /example greet
   `({
@@ -16,7 +16,7 @@ tape('match requires full route to be consumed', assert => {
   assert.end()
 })
 
-tape('match requires method to match', assert => {
+tap.test('match requires method to match', assert => {
   const router = reverse`
     GET /example greet
   `({
@@ -29,7 +29,7 @@ tape('match requires method to match', assert => {
   assert.end()
 })
 
-tape('match requires params to be validated', assert => {
+tap.test('match requires params to be validated', assert => {
   const id = reverse.param('id', /^\d+$/)
   const router = reverse`
     GET /example/${id} greet
@@ -45,7 +45,7 @@ tape('match requires params to be validated', assert => {
   assert.end()
 })
 
-tape('match returns controller, method, and cooked params', assert => {
+tap.test('match returns controller, method, and cooked params', assert => {
   const expected = (Math.random() * 10) | 0
   const id = reverse.param('id', function (value) {
     if (isNaN(value)) {
@@ -69,7 +69,7 @@ tape('match returns controller, method, and cooked params', assert => {
   assert.end()
 })
 
-tape('match context unescapes input', assert => {
+tap.test('match context unescapes input', assert => {
   const id = reverse.param('id', id => id)
   const controller = {
     greet () {
@@ -87,7 +87,7 @@ tape('match context unescapes input', assert => {
   assert.end()
 })
 
-tape('match can include routes from other routers', assert => {
+tap.test('match can include routes from other routers', assert => {
   const id = reverse.param('id', /^\d+$/)
   const routes = reverse`
     * /${id} target
@@ -106,7 +106,7 @@ tape('match can include routes from other routers', assert => {
   assert.end()
 })
 
-tape('match will hit /-routes of included routers', assert => {
+tap.test('match will hit /-routes of included routers', assert => {
   const inner = reverse`GET / main`({main () {}})
   const routes = reverse`* /test inner`({inner})
 
@@ -114,9 +114,9 @@ tape('match will hit /-routes of included routers', assert => {
   assert.end()
 })
 
-tape('match allows routes to "fall through" included routers', assert => {
+tap.test('match allows routes to "fall through" included routers', assert => {
   const id = reverse.param('id', /^\d+$/)
-  const slug = reverse.param('slug', /^[a-z_\-]{1}[\w-]*$/)
+  const slug = reverse.param('slug', /^[a-z_-]{1}[\w-]*$/)
   const expected = Math.random()
   const inner = 10 + Math.random()
   const routes = reverse`
@@ -148,7 +148,7 @@ tape('match allows routes to "fall through" included routers', assert => {
   assert.end()
 })
 
-tape('reverse returns strings', assert => {
+tap.test('reverse returns strings', assert => {
   const routes = reverse`
     GET /hello/world  greeting
     GET /good/bye     closing
@@ -161,7 +161,7 @@ tape('reverse returns strings', assert => {
   assert.end()
 })
 
-tape('reverse interpolates values', assert => {
+tap.test('reverse interpolates values', assert => {
   const name = reverse.param('name', /^\w+$/)
   const id = reverse.param('id', /^\d+$/)
   const routes = reverse`
@@ -190,7 +190,7 @@ tape('reverse interpolates values', assert => {
   assert.end()
 })
 
-tape('reverse matches included routes', assert => {
+tap.test('reverse matches included routes', assert => {
   const name = reverse.param('name', /^\w+$/)
   const id = reverse.param('id', /^\d+$/)
   const inner = reverse`
@@ -212,7 +212,7 @@ tape('reverse matches included routes', assert => {
   assert.end()
 })
 
-tape('reverse escapes params', assert => {
+tap.test('reverse escapes params', assert => {
   const name = reverse.param('name', /^\w+$/)
   const router = reverse`
     GET /${name} main

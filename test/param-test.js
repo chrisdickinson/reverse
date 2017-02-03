@@ -1,9 +1,9 @@
 'use strict'
 
 const reverse = require('..')
-const tape = require('tape')
+const tap = require('tap')
 
-tape('invalid param function should throw', assert => {
+tap.test('invalid param function should throw', assert => {
   assert.throws(() => reverse.param('anything', {}))
   assert.throws(() => reverse.param('anything', {validate: 1}))
   assert.throws(() => reverse.param('anything', 12))

@@ -1,16 +1,16 @@
 'use strict'
 
 const reverse = require('..')
-const tape = require('tape')
+const tap = require('tap')
 
-tape('throws on unexpected eof in method', assert => {
+tap.test('throws on unexpected eof in method', assert => {
   assert.throws(() => {
     reverse`GE`
   })
   assert.end()
 })
 
-tape('throws on unexpected eof in route', assert => {
+tap.test('throws on unexpected eof in route', assert => {
   assert.throws(() => {
     reverse`GET /asdf`
   })
@@ -18,7 +18,15 @@ tape('throws on unexpected eof in route', assert => {
   assert.end()
 })
 
-tape('throws on unexpected eof in target mode', assert => {
+tap.test('throws on unexpected eof in route w/comment', assert => {
+  assert.throws(() => {
+    reverse`GET /asdf # no way`
+  })
+
+  assert.end()
+})
+
+tap.test('throws on unexpected eof in target mode', assert => {
   assert.throws(() => {
     reverse`GET /asdf `
   })
@@ -26,7 +34,7 @@ tape('throws on unexpected eof in target mode', assert => {
   assert.end()
 })
 
-tape('throws on unexpected nl in method', assert => {
+tap.test('throws on unexpected nl in method', assert => {
   assert.throws(() => {
     reverse`G
     ET / asdf`
@@ -44,7 +52,7 @@ tape('throws on unexpected nl in method', assert => {
   assert.end()
 })
 
-tape('throws on unexpected nl in route', assert => {
+tap.test('throws on unexpected nl in route', assert => {
   assert.throws(() => {
     reverse`GET
       /asdf`
@@ -61,7 +69,7 @@ tape('throws on unexpected nl in route', assert => {
   assert.end()
 })
 
-tape('throws on param in method', assert => {
+tap.test('throws on param in method', assert => {
   assert.throws(() => {
     reverse`${{any: 'thing'}}GET /asdf anything`
   }, 'pre-method')
@@ -74,14 +82,14 @@ tape('throws on param in method', assert => {
   assert.end()
 })
 
-tape('throws on leading param in route', assert => {
+tap.test('throws on leading param in route', assert => {
   assert.throws(() => {
     reverse`GET ${assert}/asdf targ`
   }, 'pre-target')
   assert.end()
 })
 
-tape('throws on param in target', assert => {
+tap.test('throws on param in target', assert => {
   assert.throws(() => {
     reverse`GET /asdf ${assert}targ`
   }, 'pre-target')
@@ -96,15 +104,9 @@ tape('throws on param in target', assert => {
   assert.end()
 })
 
-const validMethods = [
-  'GET',
-  'PUT',
-  'POST',
-  'DELETE',
-  '*'
-]
+const validMethods = ['*'].concat(require('http').METHODS)
 
-tape(`accepts ${validMethods} as methods`, assert => {
+tap.test(`accepts ${validMethods} as methods`, assert => {
   validMethods.forEach(xs => assert.doesNotThrow(
     () => reverse([`${xs} /test hello`]),
     `${xs} should not throw`
@@ -112,14 +114,14 @@ tape(`accepts ${validMethods} as methods`, assert => {
   assert.end()
 })
 
-tape('throws on unknown method', assert => {
+tap.test('throws on unknown method', assert => {
   assert.throws(() => {
     reverse`GEM /asdf target`
   }, 'throws on GEM requests')
   assert.end()
 })
 
-tape('returns function', assert => {
+tap.test('returns function', assert => {
   assert.equal(
     typeof reverse`GET /asdf target`,
     'function'
@@ -127,7 +129,8 @@ tape('returns function', assert => {
   assert.end()
 })
 
-tape('allows whitespace between method and route', assert => {
+/* eslint-disable no-tabs */
+tap.test('allows whitespace between method and route', assert => {
   assert.doesNotThrow(() => {
     reverse`GET   /asdf womp`
   }, 'multiple spaces are okay')
@@ -138,7 +141,7 @@ tape('allows whitespace between method and route', assert => {
   assert.end()
 })
 
-tape('allows whitespace between route and target', assert => {
+tap.test('allows whitespace between route and target', assert => {
   assert.doesNotThrow(() => {
     reverse`GET /asdf       womp`
   }, 'multiple spaces are okay')
@@ -148,4 +151,25 @@ tape('allows whitespace between route and target', assert => {
 
   assert.end()
 })
+/* eslint-enable no-tabs */
 
+tap.test('we are okay with comments', assert => {
+  assert.doesNotThrow(() => {
+    reverse`
+      # hello world
+      GET /asdf       womp
+      # things are okay
+      POST /foo       bloo
+      GET # intersperse
+      /the # the
+      thing # comment
+      # YEP
+    `
+  }, 'comments throughout!')
+  assert.doesNotThrow(() => {
+    reverse`
+      # hello world
+    `
+  }, 'just comments')
+  assert.end()
+})
