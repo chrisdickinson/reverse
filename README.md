@@ -112,13 +112,13 @@ of the following parts:
 Each line with these elements defines a **target**. All whitespace between any
 of these parts is ignored.
 
-* `$METHOD` defines the HTTP methods that the **target** accepts. Valid values are
-`GET`, `POST`, `PUT`, `DELETE`, and `*` (for "match all".) Only strings may be interpolated
-here. All other interpolations are disallowed.
+* `$METHOD` defines the HTTP methods that the **target** accepts. Valid values are all http methods [recognized by Node][node-methods], and `*` (for "match all".) Only strings may be interpolated here. All other interpolations are disallowed.
 * `$ROUTE` defines the route that must be matched. Interpolated objects must be
 valid **parameters**. It's common to begin the route with a leading `/`.
-* `$NAME` is a string that will be used to match a property in bound **controllers**. Only
-string interpolation is allowed here, all others are disallowed.
+* `$NAME` is a string that will be used to match a property in bound **controllers**. Only string interpolation is allowed here, all others are disallowed.
+
+The `#` character will be interpeted as the beginning of a line comment and may
+appear anywhere in the text.
 
 ##### `Controller` object
 
@@ -219,7 +219,7 @@ be used without further specification.
 
 -------------
 
-#### `reverse.param(name: String, validator: Validator) → Parameter`
+#### `reverse.param(name: String, validator: Validator, consume: String) → Parameter`
 
 * `Validator : Function(String) → Any`
 * `Validator : RegExp`
@@ -240,11 +240,25 @@ The value returned will be the cooked value returned by joi.
 If the `validator` is a `RegExp`, the value will always be a string. These
 regexen should always begin with `^` and end with `$` to ensure a full match.
 
+`consume` is a string containing regex source that controls how the parameter
+consumes characters from the incoming path. If not given, it will default to
+`([^\/]+)`, which will give the parameter the behavior of matching between `/`
+segments.
+
+If, for example, you'd like to match an entire path including `/` characters,
+you could write:
+
+```javascript
+// we use String here to map the input to the output without any transform
+reverse.param('path', String, '(.+)')
+```
+
 -------------
 
 ## License
 
 MIT
 
+[node-methods]: https://nodejs.org/api/http.html#http_http_methods
 [domain-specific-language]: https://en.wikipedia.org/wiki/Domain-specific_language
 [docs-api-reference]: #api

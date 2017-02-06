@@ -212,6 +212,32 @@ tap.test('reverse matches included routes', assert => {
   assert.end()
 })
 
+tap.test('all provides info on all routes', assert => {
+  const name = reverse.param('name', /^\w+$/)
+  const id = reverse.param('id', /^\d+$/)
+  const inner = reverse`
+    GET /goof  dne
+    GET /${id} getTarget
+  `({getTarget () {}})
+  const outer = reverse`
+    GET /flub/${name} fn
+    GET /${name} inner
+  `({inner, flub () {}})
+  const results = Array.from(outer.all())
+  assert.deepEqual(results.map(xs => xs.name), [
+    'fn',
+    'inner.dne',
+    'inner.getTarget'
+  ])
+  assert.deepEqual(results.map(xs => xs.route), [
+    '/flub/:name',
+    '/:name/goof',
+    '/:name/:id'
+  ])
+
+  assert.end()
+})
+
 tap.test('reverse escapes params', assert => {
   const name = reverse.param('name', /^\w+$/)
   const router = reverse`
@@ -227,5 +253,57 @@ tap.test('reverse escapes params', assert => {
     router.reverse('main', {name: '@hello/world'}, true),
     '/@hello/world'
   )
+  assert.end()
+})
+
+tap.test('match param with multiple capture group regex', assert => {
+  const abc = reverse.param('abc', id => id, '(([^b]+)(b(\\w+))?)')
+  const id = reverse.param('id', id => id)
+  const router = reverse`
+    GET /${abc}${id} target
+  `({target () {}})
+
+  const result = router.match('GET', `/abc102`)
+  assert.equal(result.context.get('abc'), 'abc10')
+  assert.equal(result.context.get('id'), '2')
+  assert.end()
+})
+
+tap.test('match param with non-capturing group regex', assert => {
+  const abc = reverse.param('abc', id => id, '(([^b]+)(b(?:\\w+))?)')
+  const id = reverse.param('id', id => id)
+  const router = reverse`
+    GET /${abc}${id} target
+  `({target () {}})
+
+  const result = router.match('GET', `/abc102`)
+  assert.equal(result.context.get('abc'), 'abc10')
+  assert.equal(result.context.get('id'), '2')
+  assert.end()
+})
+
+tap.test('match param with lookahead group regex', assert => {
+  const abc = reverse.param('abc', id => id, '(([^b]+)(b(?=\\w+))?)')
+  const id = reverse.param('id', id => id)
+  const router = reverse`
+    GET /${abc}${id} target
+  `({target () {}})
+
+  const result = router.match('GET', `/abc102`)
+  assert.equal(result.context.get('abc'), 'ab')
+  assert.equal(result.context.get('id'), 'c102')
+  assert.end()
+})
+
+tap.test('match param with negated lookahead group regex', assert => {
+  const abc = reverse.param('abc', id => id, '(([^b]+)(b(?!goof))?)')
+  const id = reverse.param('id', id => id)
+  const router = reverse`
+    GET /${abc}${id} target
+  `({target () {}})
+
+  const result = router.match('GET', `/abc102`)
+  assert.equal(result.context.get('abc'), 'ab')
+  assert.equal(result.context.get('id'), 'c102')
   assert.end()
 })
