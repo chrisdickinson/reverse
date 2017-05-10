@@ -27,9 +27,9 @@
   },
   "homepage": "https://github.com/chrisdickinson/reverse#readme",
   "devDependencies": {
-    "joi": "^10.2.1",
-    "standard": "^8.6.0",
-    "tap": "^10.0.0"
+    "joi": "^10.4.1",
+    "standard": "^10.0.2",
+    "tap": "^10.3.2"
   },
   "dependencies": {
     "quotemeta": "0.0.0"
