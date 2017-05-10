@@ -307,3 +307,60 @@ tap.test('match param with negated lookahead group regex', assert => {
   assert.equal(result.context.get('id'), 'c102')
   assert.end()
 })
+
+tap.test('concatenating routers works as expected', assert => {
+  const lhs = reverse`
+    GET /hello foo
+  `({
+    foo () {
+      return 1
+    }
+  })
+  const rhs = reverse`
+    GET /hello/world bar
+  `({
+    bar () {
+      return 2
+    }
+  })
+
+  const routes = lhs.concat(rhs)
+
+  const hitsRHS = routes.match('GET', '/hello/world')
+  assert.equal(hitsRHS.target(), 2)
+
+  const hitsLHS = routes.match('GET', '/hello')
+  assert.equal(hitsLHS.target(), 1)
+
+  assert.end()
+})
+
+tap.test('concatenating routers fails on shared targets', assert => {
+  const lhs = reverse`
+    GET /hello foo
+    POST /bloo blah
+    GET / gnarly
+  `({
+    foo () {
+      return 1
+    }
+  })
+  const rhs = reverse`
+    GET /hello/world foo
+    HEAD / gnarly
+  `({
+    bar () {
+      return 2
+    }
+  })
+
+  assert.throws(() => {
+    const routes = lhs.concat(rhs)
+  })
+  try {
+    lhs.concat(rhs)
+  } catch (err) {
+    assert.equal(err.message, 'cannot ".concat" routers due to shared targets: "foo", "gnarly"')
+  }
+  assert.end()
+})

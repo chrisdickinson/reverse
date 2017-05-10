@@ -32,6 +32,7 @@
     "tap": "^10.3.2"
   },
   "dependencies": {
+    "@sets/intersection": "^1.0.0",
     "quotemeta": "0.0.0"
   }
 }
