@@ -355,7 +355,7 @@ tap.test('concatenating routers fails on shared targets', assert => {
   })
 
   assert.throws(() => {
-    const routes = lhs.concat(rhs)
+    lhs.concat(rhs)
   })
   try {
     lhs.concat(rhs)
