@@ -69,6 +69,23 @@ tap.test('match returns controller, method, and cooked params', assert => {
   assert.end()
 })
 
+tap.only('parital route match doesn\'t fail on unimplemented controller', assert => {
+  const controller = {
+    greet () {
+    }
+  }
+  const router = reverse`
+    GET /           hello
+    GET /greetings  greet
+  `(controller)
+
+  const result = router.match('GET', `/greetings`)
+  assert.ok(result)
+  assert.equal(result.target, controller.greet)
+  assert.equal(result.controller, controller)
+  assert.end()
+})
+
 tap.test('match context unescapes input', assert => {
   const id = reverse.param('id', id => id)
   const controller = {
