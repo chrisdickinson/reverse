@@ -364,3 +364,17 @@ tap.test('concatenating routers fails on shared targets', assert => {
   }
   assert.end()
 })
+
+tap.test('normalizes non-reserved path characters', assert => {
+  const router = reverse`
+    GET /~ greet
+  `({
+    greet () {
+    }
+  })
+
+  // note the trailing slash!
+  const result = router.match('GET', '/%7E')
+  assert.ok(result.context, 'Making sure that the result exists')
+  assert.end()
+})
