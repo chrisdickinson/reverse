@@ -69,7 +69,7 @@ tap.test('match returns controller, method, and cooked params', assert => {
   assert.end()
 })
 
-tap.only('parital route match doesn\'t fail on unimplemented controller', assert => {
+tap.test('partial route match doesn\'t fail on unimplemented controller', assert => {
   const controller = {
     greet () {
     }
