@@ -123,6 +123,27 @@ tap.test('match can include routes from other routers', assert => {
   assert.end()
 })
 
+tap.test('match does not omit inner slashes between nested routers', assert => {
+  const routes = reverse`
+    * /a target
+  `
+  const router = routes({
+    target: routes({
+      target: routes({
+        target () {
+
+        }
+      })
+    })
+  })
+
+  assert.equal(router.match('GET', '/aaa'), null)
+  assert.equal(router.match('GET', '/aa/a'), null)
+  assert.equal(router.match('GET', '/a/aa'), null)
+  assert.ok(router.match('GET', '/a/a/a'))
+  assert.end()
+})
+
 tap.test('match will hit /-routes of included routers', assert => {
   const inner = reverse`GET / main`({main () {}})
   const routes = reverse`* /test inner`({inner})
