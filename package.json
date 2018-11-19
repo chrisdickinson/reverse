@@ -4,7 +4,7 @@
   "description": "a url router with url reversing capabilities",
   "main": "./lib/index.js",
   "scripts": {
-    "test": "tap ${TAP_FLAGS:-'--'} test/*.js",
+    "test": "tap test/*.js",
     "lint": "standard",
     "posttest": "npm run lint"
   },
