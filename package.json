@@ -4,12 +4,9 @@
   "description": "a url router with url reversing capabilities",
   "main": "./lib/index.js",
   "scripts": {
-    "test:code": "tap ${TAP_FLAGS:-'--'} test/*.js",
-    "test:style": "standard",
-    "test:travis": "npm run cov:test && npm run test:style",
-    "test": "npm run test:code && npm run test:style",
-    "cov:test": "TAP_FLAGS='--cov' npm run test:code",
-    "cov:view": "TAP_FLAGS='--coverage-report=html' npm run test:code"
+    "test": "tap ${TAP_FLAGS:-'--'} test/*.js",
+    "lint": "standard",
+    "posttest": "npm run lint"
   },
   "repository": {
     "type": "git",
