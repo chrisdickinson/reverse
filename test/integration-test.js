@@ -34,9 +34,9 @@ tap.test('match requires params to be validated', assert => {
   const router = reverse`
     GET /example/${id} greet
   `({
-    greet () {
-    }
-  })
+  greet () {
+  }
+})
 
   // note the parameters ("hey", "hey-1", "1") — only "1" should pass!
   assert.equal(router.match('GET', '/example/hey'), null)
@@ -181,13 +181,13 @@ tap.test('match allows routes to "fall through" included routers', assert => {
     *     /blog           blogRoutes
     GET   /blog/${slug}   blogPost
   `({
-    blogRoutes: reverse`
+  blogRoutes: reverse`
       POST /${id}          target
     `({target () { return inner }}),
-    blogPost () {
-      return expected
-    }
-  })
+  blogPost () {
+    return expected
+  }
+})
 
   const match = routes.match('GET', '/blog/hey-there')
   assert.equal(
@@ -226,9 +226,9 @@ tap.test('reverse interpolates values', assert => {
     GET /hello/${name}                greeting
     GET /good/bye/${name}/${id}       closing
   `({
-    greeting () {},
-    closing () {}
-  })
+  greeting () {},
+  closing () {}
+})
 
   assert.throws(() => {
     assert.equal(routes.reverse('greeting'), '/hello/world')
